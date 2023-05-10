@@ -24,7 +24,7 @@ class GenomeAssembler():
 
     def __init__(self, reads):
         self.reads = set(reads)
-        self.overlapMap, self.overlapEdges = self.overlap_map()
+        self.overlapMap, self.overlapEdges = self.overlapMap()
         self.explored = set()
 
 
@@ -43,7 +43,7 @@ class GenomeAssembler():
             start += 1
 
 
-    def overlap_map(self):
+    def overlapMap(self):
         """
         Return dictionary of keys `suffix read` and values list of tuples  (`prefix read`, `overlap lenght`) sorted by non increasing `overlap lenght`
         """
@@ -60,7 +60,7 @@ class GenomeAssembler():
         return overlaps, overlapEdges
 
     
-    def choose_largest_overlaping_reads(self):
+    def chooseLargestOverlapingReads(self):
         """
         Return a pair of reads `x`, `y` of max overlap `largestOverlap` from a set of reads 
         """
@@ -74,7 +74,7 @@ class GenomeAssembler():
         return x, y, largestOverlap
 
 
-    def is_hamiltonian_cycle(self, path) -> bool:
+    def isHamiltonianCycle(self, path) -> bool:
         """
         Return `True` if a list of reads `path` is a valid Hamiltonian cycle, otherwise return `False`
         """
@@ -100,13 +100,13 @@ class GenomeAssembler():
         return [x for x,_ in self.overlapMap[vertex]]
 
     
-    def recursivehamiltonian_path(self, path:list):
+    def recursiveHamiltonianPath(self, path:list):
         """
         Return a Hamiltonian path
         """
     
         # return a valid Hamiltonian path when possible 
-        if self.is_hamiltonian_cycle(path):
+        if self.isHamiltonianCycle(path):
             return path
 
         # greedily explore neighbors of last vertex
@@ -119,7 +119,7 @@ class GenomeAssembler():
 
                 nextPath.append(v)
                 self.explored.add(v)
-                result = self.recursivehamiltonian_path(nextPath)
+                result = self.recursiveHamiltonianPath(nextPath)
                 if result is not None:
                     return result
 
@@ -164,8 +164,8 @@ class GenomeAssembler():
 
 reads = [input() for _ in range(NUM_READS)]
 g = GenomeAssembler(reads)
-first, second,_ = g.choose_largest_overlaping_reads()
+first, second,_ = g.chooseLargestOverlapingReads()
 g.explored.add(first)
 g.explored.add(second)
-path = g.recursivehamiltonian_path([first, second])
+path = g.recursiveHamiltonianPath([first, second])
 print(g.gluePath(path))
